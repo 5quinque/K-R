@@ -5,9 +5,9 @@
 char line[MAXLINE];
 
 int getline_ryan(void);
-int conv_tabs(void);
+int conv_spaces(void);
 
-int conv_tabs() {
+int conv_spaces() {
 	int i, j, spaces;
 
 	for (i = 0; line[i] != '\0'; ++i) {
