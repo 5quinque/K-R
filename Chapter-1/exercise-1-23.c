@@ -1,40 +1,27 @@
 #include <stdio.h>
-#define MAXLINE 1000
-#define TABSPACE 4
-#define INBLANK 1
-#define OUTBLANK 0
+#define MAXLINE 1024
+#define IN 1
+#define OUT 0
 
 char line[MAXLINE];
+int state = OUT;
 
 int getline_ryan(void);
-int conv_spaces(void);
+void remove_comment(void);
 
-int conv_spaces() {
-	int i, j, spaces;
-	int blank_count = 0;
-	int state = OUTBLANK;
+void remove_comment() {
+	int i;
 
 	for (i = 0; line[i] != '\0'; ++i) {
-		if (line[i] != ' ') {
-			state = OUTBLANK;
-
-			if (blank_count > 0) {
-				if (blank_count >= 4) {
-					printf("\t");
-					blank_count = blank_count - 4;
-				}
-				for (j = 0; j < blank_count; ++j)
-					printf(" ");
+		if (state == OUT) {
+			if (line[i] == '/' && line[i+1] == '*') {
+				state = IN;
+			} else {
+				printf("%c", line[i]);
 			}
-
-			printf("%c", line[i]);
-
-			blank_count = 0;
-		} else {
-			state = INBLANK;
-			++blank_count;
+		} else if (line[i] == '/' && line [i-1] == '*') {
+			state = OUT;
 		}
-
 	}
 }
 
@@ -42,7 +29,7 @@ int main() {
 	int len;
 
 	while ((len = getline_ryan()) > 0) {
-		conv_spaces();
+		remove_comment();
 	}
 	
 	return 0;
