@@ -5,32 +5,29 @@
 
 char line[MAXLINE];
 int state = OUT;
-int quotestate = OUT;
+int line_number = 0;
+char syntax_open[4] = "\"([{";
+char syntax_close[4] = "\")]}";
+int syntax = 0;
 
 int getline_ryan(void);
-void remove_comment(void);
+void check_syntax(void);
 
-void remove_comment() {
-	int i;
+void check_syntax() {
+	int i, j;
+	
+	line_number++;
 
 	for (i = 0; line[i] != '\0'; ++i) {
-		if (quotestate == OUT && state == OUT) {
-			if (line[i] == '"' && line[i-1] != '\\') {
-				quotestate = IN;
+		for (j = 0; j < 4; ++j) {
+			if (line[i] == syntax_open[j] && state == OUT) {
+				syntax = line_number;
+				state = IN;
+			} else if (line[i] == syntax_close[j] && state == IN) {
+				state = OUT;
 			}
-		} else if (line[i] == '"' && line[i-1] != '\\') {
-			quotestate = OUT;
 		}
 
-		if (state == OUT) {
-			if (line[i] == '/' && line[i+1] == '*' && quotestate == OUT) {
-				state = IN;
-			} else {
-				printf("%c", line[i]);
-			}
-		} else if (line[i] == '/' && line [i-1] == '*') {
-			state = OUT;
-		}
 	}
 }
 
@@ -38,7 +35,13 @@ int main() {
 	int len;
 
 	while ((len = getline_ryan()) > 0) {
-		remove_comment();
+		check_syntax();
+	}
+
+	if (state == IN) {
+		printf("Error at line: %d\n", syntax);
+	} else {
+		printf("Syntax looks correct\n");
 	}
 	
 	return 0;
