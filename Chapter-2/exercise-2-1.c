@@ -10,7 +10,7 @@ int main() {
 	printf("Long min: %ld, max: %ld\n", LONG_MIN, LONG_MAX);
 
 	printf("Unsigned Integer max: %d\n", UINT_MAX);
-	printf("Unsigned Character max: %d\n", UCHAR_MAX;
+	printf("Unsigned Character max: %d\n", UCHAR_MAX);
 	printf("Unsigned Short max: %d\n", USHRT_MAX);
 	printf("Unsigned Long min: %lu\n", ULONG_MAX);
 
