@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-#define MAXLINE = 100
+#define MAXLINE 100
 
 void escape(char s[], char t[]);
 

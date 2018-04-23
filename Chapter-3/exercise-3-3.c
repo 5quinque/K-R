@@ -1,41 +1,58 @@
 #include <stdio.h>
+#include <string.h>
 
-#define ARR_SIZE 10
+#define MAXLINE 100
 
-int binsearch(int x, int v[], int n);
+void expand(char s1[], char s2[]);
+int is_alphanum(char c);
+int add_characters(char s1[], char s2[], int s1_index, int s2_index);
 
 int main() {
-  int v[ARR_SIZE];
-  int i;
+  char s1[MAXLINE] = "-a-f-j0-5U-Z";
+  char s2[10 * MAXLINE];
 
-  for (i = 0; i < ARR_SIZE; i++)
-    v[i] = i;
+  expand(s1, s2);
 
-  for (i = 0; i < ARR_SIZE; i++)
-    printf("index of %d in v: %d\n", i, binsearch(i, v, ARR_SIZE));
-
-  /* test a value we know it not in the array */
-  printf("index of %d in v: %d\n", ARR_SIZE + 1, binsearch(ARR_SIZE + 1, v, ARR_SIZE));
+  printf("s1: '%s'\n", s1);
+  printf("s2: '%s'\n", s2);
 
   return 0;
 }
 
-int binsearch(int x, int v[], int n) {
-  int low, high, mid;
+void expand(char s1[], char s2[]) {
+  int s1_index;
+  int s2_index;
+  int c;
 
-  low = 0;
-  high = n - 1;
+	for (s1_index = 0, s2_index = 0; s1_index <= strlen(s1); s1_index++) {
+    if ((s1_index == 0 || s1_index == strlen(s1)) && s1[s1_index] == '-') {
+      s2[s2_index] = s1[s1_index];
+      s2_index++;
+      continue;
+    }
 
-  while (low <= high && x != v[mid]) {
-    mid = (low + high) / 2;
-    if (x < v[mid])
-      high = mid - 1;
-    else
-      low = mid + 1;
+    if (is_alphanum(s1[s1_index]) && s1[s1_index + 2] > s1[s1_index] &&
+        s1[s1_index + 2] <= 'z' && s1[s1_index+1] == '-') {
+      s2_index = add_characters(s1, s2, s1_index, s2_index);
+    } else if (s1[s1_index] != '-') {
+      s2[s2_index] = s1[s1_index];
+      s2_index++;
+    }
+  }
+}
+
+int is_alphanum(char c) {
+  return (c >= 'a' && c <= 'z') ||
+    (c >= 'A' && c <= 'Z') ||
+    (c >= '0' && c <= '9');
+}
+
+int add_characters(char s1[], char s2[], int s1_index, int s2_index) {
+  int char_inc;
+  for (char_inc = 0; char_inc < s1[s1_index + 2] - s1[s1_index]; s2_index++, char_inc++) {
+    s2[s2_index] = s1[s1_index] + char_inc;
   }
 
-  if (x != v[mid])
-    return -1;
-
-  return mid; /* no match */
+  return s2_index;
 }
+
