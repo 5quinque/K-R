@@ -1,7 +1,7 @@
 #include <stdio.h>
 #define MAXLINE 1000
 
-int getline(char line[], int max);
+int my_getline(char line[], int max);
 int strrindex(char source[], char searchfor[]);
 
 char pattern[] = "ould";
@@ -10,16 +10,17 @@ int main() {
   char line[MAXLINE];
   int found = 0;
 
-  while (getline(line, MAXLINE) > 0) {
+  while (my_getline(line, MAXLINE) > 0) {
     if (strrindex(line, pattern) >= 0) {
       printf("%s", line);
       found++;
+    }
   }
 
   return found;
 }
 
-int getline(char s[], int lim) {
+int my_getline(char s[], int lim) {
   int c, i;
 
   i = 0;
